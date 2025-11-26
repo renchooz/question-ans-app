@@ -89,6 +89,31 @@ npm start
 
 The frontend will run on `http://localhost:3000`
 
+### Environment Configuration
+
+- Copy `backend/env.example` to `backend/.env` and fill in your MongoDB connection string, JWT secret, and allowed CORS origin(s). Multiple origins can be comma-separated.
+- Copy `frontend/env.example` to `frontend/.env` and update `REACT_APP_API_URL` to point at your deployed backend (for local dev it can stay `http://localhost:5000/api`).
+
+Keeping sample env files in source control ensures Render and other hosting providers can be configured quickly without guessing the required keys.
+
+## Deploying on Render
+
+The repository includes a `render.yaml` blueprint so you can spin up matching backend and frontend services with one click.
+
+1. Commit your latest changes and push them to GitHub.
+2. In Render, choose **New + → Blueprint** and point it at your repo. Render will read `render.yaml` and create:
+   - `qa-app-backend`: Node web service that runs `npm start` from the `backend` folder.
+   - `qa-app-frontend`: Static site that builds the React app from the `frontend` folder.
+3. In the backend service settings add the required environment variables (listed in `backend/env.example`):
+   - `MONGODB_URI` (Atlas or other connection string)
+   - `JWT_SECRET`
+   - `JWT_EXPIRE` (optional, defaults to `7d`)
+   - `CORS_ORIGIN` (comma-separated list that must include the final frontend URL)
+4. Once the backend deploys, grab its public URL (e.g. `https://qa-app-backend.onrender.com`) and set `REACT_APP_API_URL` for the frontend service to `https://qa-app-backend.onrender.com/api`.
+5. Trigger a redeploy of the frontend so the build picks up the updated API URL.
+
+> Tip: Render automatically injects the `PORT` environment variable for the backend. The server now waits for MongoDB to connect before listening, which avoids the “MongoNetworkError” issues seen previously.
+
 ## Creating an Admin User
 
 To create an admin user, you can use any of the following methods:

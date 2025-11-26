@@ -100,27 +100,27 @@ const AdminDashboard = () => {
   }, [results]);
 
   useEffect(() => {
-    fetchData();
+    const loadInitialData = async () => {
+      setLoading(true);
+      try {
+        await Promise.all([
+          fetchQuestions(),
+          fetchAnalytics(),
+          fetchResults(),
+          fetchUsers(),
+          fetchLoggedInUsers()
+        ]);
+      } catch (error) {
+        toast.error('Failed to fetch data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadInitialData();
     const interval = setInterval(fetchLoggedInUsers, 5000); // Refresh every 5 seconds
     return () => clearInterval(interval);
   }, [activeTab]);
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      await Promise.all([
-        fetchQuestions(),
-        fetchAnalytics(),
-        fetchResults(),
-        fetchUsers(),
-        fetchLoggedInUsers()
-      ]);
-    } catch (error) {
-      toast.error('Failed to fetch data');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const fetchQuestions = async () => {
     try {
