@@ -16,11 +16,3 @@ services:
         value: 7d
       - key: CORS_ORIGIN
         value: https://your-frontend-domain.onrender.com
-
-  - type: static
-    name: qa-app-frontend
-    buildCommand: cd frontend && npm install && npm run build
-    publishPath: frontend/build
-    envVars:
-      - key: REACT_APP_API_URL
-        value: https://qa-app-backend.onrender.com/api
