@@ -230,3 +230,28 @@ qa-app/
 
 This project is open source and available under the MIT License.
 
+
+- `GET /api/admin/analytics` - Get analytics for all questions
+- `GET /api/admin/analytics/:questionId` - Get analytics for a specific question
+- `GET /api/admin/results` - Get all results
+
+## Security Features
+
+- Password hashing with bcryptjs
+- JWT-based authentication
+- Protected routes (both frontend and backend)
+- Admin-only routes for sensitive operations
+- Input validation and sanitization
+
+## Notes
+
+- Make sure MongoDB is running before starting the backend
+- The logged-in users count updates every 5 seconds in the admin dashboard
+- Users can only answer each question once
+- Questions must have exactly 4 options
+- The correct answer is specified by index (0-3)
+
+## License
+
+This project is open source and available under the MIT License.
+

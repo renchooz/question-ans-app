@@ -25,3 +25,31 @@ services:
       - key: REACT_APP_API_URL
         value: https://qa-app-backend.onrender.com/api
 
+
+  - type: web
+    name: qa-app-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_VERSION
+        value: '18'
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRE
+        value: 7d
+      - key: CORS_ORIGIN
+        value: https://your-frontend-domain.onrender.com
+
+  - type: static_site
+    name: qa-app-frontend
+    buildCommand: cd frontend && npm install && npm run build
+    publishPath: frontend/build
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://qa-app-backend.onrender.com/api
+
+

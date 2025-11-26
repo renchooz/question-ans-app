@@ -2,9 +2,9 @@ import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { API_BASE_URL } from '../config';
 import toast from 'react-hot-toast';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 const RETENTION_DAYS = 30;
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 
@@ -124,7 +124,7 @@ const AdminDashboard = () => {
 
   const fetchQuestions = async () => {
     try {
-      const response = await axios.get(`${API_URL}/admin/questions`);
+      const response = await axios.get(`${API_BASE_URL}/admin/questions`);
       setQuestions(response.data.questions);
     } catch (error) {
       console.error('Failed to fetch questions:', error);
@@ -133,7 +133,7 @@ const AdminDashboard = () => {
 
   const fetchAnalytics = async () => {
     try {
-      const response = await axios.get(`${API_URL}/admin/analytics`);
+      const response = await axios.get(`${API_BASE_URL}/admin/analytics`);
       setAnalytics(response.data.analytics);
     } catch (error) {
       console.error('Failed to fetch analytics:', error);
@@ -142,7 +142,7 @@ const AdminDashboard = () => {
 
   const fetchResults = async () => {
     try {
-      const response = await axios.get(`${API_URL}/admin/results`);
+      const response = await axios.get(`${API_BASE_URL}/admin/results`);
       setResults(response.data.results);
     } catch (error) {
       console.error('Failed to fetch results:', error);
@@ -151,7 +151,7 @@ const AdminDashboard = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(`${API_URL}/admin/users`);
+      const response = await axios.get(`${API_BASE_URL}/admin/users`);
       setUsers(response.data.users);
     } catch (error) {
       console.error('Failed to fetch users:', error);
@@ -160,7 +160,7 @@ const AdminDashboard = () => {
 
   const fetchLoggedInUsers = async () => {
     try {
-      const response = await axios.get(`${API_URL}/admin/logged-in-users`);
+      const response = await axios.get(`${API_BASE_URL}/admin/logged-in-users`);
       setLoggedInCount(response.data.loggedInUsers);
     } catch (error) {
       console.error('Failed to fetch logged in users:', error);
@@ -183,12 +183,12 @@ const AdminDashboard = () => {
     try {
       if (editingQuestion) {
         await axios.put(
-          `${API_URL}/admin/questions/${editingQuestion._id}`,
+          `${API_BASE_URL}/admin/questions/${editingQuestion._id}`,
           questionForm
         );
         toast.success('Question updated successfully');
       } else {
-        await axios.post(`${API_URL}/admin/questions`, questionForm);
+        await axios.post(`${API_BASE_URL}/admin/questions`, questionForm);
         toast.success('Question added successfully');
       }
       
@@ -233,7 +233,7 @@ const AdminDashboard = () => {
     }
 
     try {
-      await axios.delete(`${API_URL}/admin/questions/${id}`);
+      await axios.delete(`${API_BASE_URL}/admin/questions/${id}`);
       toast.success('Question archived. Analytics retained for 30 days.');
       fetchQuestions();
       fetchAnalytics();
@@ -252,7 +252,7 @@ const AdminDashboard = () => {
     }
 
     try {
-      await axios.delete(`${API_URL}/admin/questions/${id}/permanent`);
+      await axios.delete(`${API_BASE_URL}/admin/questions/${id}/permanent`);
       toast.success('Question history deleted');
       fetchQuestions();
       fetchAnalytics();

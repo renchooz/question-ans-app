@@ -2,9 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { API_BASE_URL } from '../config';
 import toast from 'react-hot-toast';
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const Dashboard = () => {
   const [questions, setQuestions] = useState([]);
@@ -32,11 +31,11 @@ const Dashboard = () => {
 
   const fetchQuestions = async () => {
     try {
-      const response = await axios.get(`${API_URL}/questions`);
+      const response = await axios.get(`${API_BASE_URL}/questions`);
       setQuestions(response.data.questions);
       
       // Fetch user's answered questions
-      const answersResponse = await axios.get(`${API_URL}/answers/my-answers`);
+      const answersResponse = await axios.get(`${API_BASE_URL}/answers/my-answers`);
       const answeredIds = new Set(
         answersResponse.data.answers.map(a => a.question._id)
       );
@@ -64,7 +63,7 @@ const Dashboard = () => {
     setSubmitting(true);
 
     try {
-      const response = await axios.post(`${API_URL}/answers`, {
+      const response = await axios.post(`${API_BASE_URL}/answers`, {
         questionId: currentQuestion._id,
         selectedOption
       });
