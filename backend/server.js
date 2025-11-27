@@ -73,21 +73,21 @@ const startServer = async () => {
 
     const server = app
       .listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
       })
       .on('error', (err) => {
-        if (err.code === 'EADDRINUSE') {
+  if (err.code === 'EADDRINUSE') {
           console.error(
             `Port ${PORT} is already in use. Please free the port or use a different port.`
           );
-          console.error('To find and kill the process using this port, run:');
-          console.error(`  netstat -ano | findstr :${PORT}`);
-          console.error(`  taskkill /PID <PID> /F`);
-        } else {
-          console.error('Server error:', err);
-        }
-        process.exit(1);
-      });
+    console.error('To find and kill the process using this port, run:');
+    console.error(`  netstat -ano | findstr :${PORT}`);
+    console.error(`  taskkill /PID <PID> /F`);
+  } else {
+    console.error('Server error:', err);
+  }
+  process.exit(1);
+});
 
     const gracefulShutdown = () => {
       console.log('Gracefully shutting down server...');

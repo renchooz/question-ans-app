@@ -10,6 +10,8 @@ const Dashboard = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [answeredQuestions, setAnsweredQuestions] = useState(new Set());
+  const [answerFeedback, setAnswerFeedback] = useState({});
+  const [correctCount, setCorrectCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const { user, logout } = useContext(AuthContext);
@@ -36,9 +38,22 @@ const Dashboard = () => {
       
       // Fetch user's answered questions
       const answersResponse = await axios.get(`${API_BASE_URL}/answers/my-answers`);
-      const answeredIds = new Set(
-        answersResponse.data.answers.map(a => a.question._id)
-      );
+      const answeredIds = new Set(answersResponse.data.answers.map((a) => a.question._id));
+      const feedbackMap = {};
+      let correctTotal = 0;
+      answersResponse.data.answers.forEach((answer) => {
+        feedbackMap[answer.question._id] = {
+          isCorrect: answer.isCorrect,
+          correctAnswer: answer.question.correctAnswer,
+          selectedOption: answer.selectedOption
+        };
+        if (answer.isCorrect) {
+          correctTotal += 1;
+        }
+      });
+
+      setAnswerFeedback(feedbackMap);
+      setCorrectCount(correctTotal);
       setAnsweredQuestions(answeredIds);
     } catch (error) {
       toast.error('Failed to fetch questions');
@@ -68,15 +83,20 @@ const Dashboard = () => {
         selectedOption
       });
 
-      if (response.data.answer.isCorrect) {
-        toast.success('Correct answer! 🎉');
-      } else {
-        toast.error('Incorrect answer. Try again next time!');
-      }
-
       const updatedAnswered = new Set([...answeredQuestions, currentQuestion._id]);
       setAnsweredQuestions(updatedAnswered);
       setSelectedOption(null);
+      setAnswerFeedback((prev) => ({
+        ...prev,
+        [currentQuestion._id]: {
+          isCorrect: response.data.answer.isCorrect,
+          correctAnswer: response.data.answer.correctAnswer,
+          selectedOption
+        }
+      }));
+      if (response.data.answer.isCorrect) {
+        setCorrectCount((prev) => prev + 1);
+      }
 
       // Move to next question if available
       if (
@@ -120,6 +140,7 @@ const Dashboard = () => {
 
   const currentQuestion = questions[currentQuestionIndex];
   const isAnswered = answeredQuestions.has(currentQuestion._id);
+  const feedback = answerFeedback[currentQuestion._id];
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
   return (
@@ -147,6 +168,9 @@ const Dashboard = () => {
               >
                 Logout
               </button>
+              <div className="px-4 py-2 bg-green-100 text-green-800 rounded-lg font-semibold">
+                Correct Answers: {correctCount}
+              </div>
             </div>
           </div>
         </div>
@@ -176,35 +200,63 @@ const Dashboard = () => {
               {currentQuestion.question}
             </h2>
             <div className="space-y-3">
-              {currentQuestion.options.map((option, index) => (
+              {currentQuestion.options.map((option, index) => {
+                let optionState = '';
+                if (feedback) {
+                  if (index === feedback.correctAnswer) {
+                    optionState = 'border-green-500 bg-green-50';
+                  } else if (index === feedback.selectedOption) {
+                    optionState = 'border-red-500 bg-red-50';
+                  } else {
+                    optionState = 'border-gray-200 opacity-80';
+                  }
+                }
+
+                const isSelected = selectedOption === index;
+                return (
                 <button
                   key={index}
                   onClick={() => !isAnswered && setSelectedOption(index)}
                   disabled={isAnswered}
                   className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
-                    isAnswered
+                    feedback
+                      ? optionState
+                      : isAnswered
                       ? 'cursor-not-allowed opacity-60'
-                      : selectedOption === index
+                      : isSelected
                       ? 'border-blue-600 bg-blue-50'
                       : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
-                  }`}
+                  } ${feedback ? 'cursor-not-allowed' : ''}`}
                 >
                   <div className="flex items-center">
                     <div
                       className={`w-6 h-6 rounded-full border-2 mr-3 flex items-center justify-center ${
-                        selectedOption === index
+                        feedback
+                          ? index === feedback.correctAnswer
+                            ? 'border-green-500 bg-green-500 text-white'
+                            : index === feedback.selectedOption
+                            ? 'border-red-500 bg-red-500 text-white'
+                            : 'border-gray-300'
+                          : selectedOption === index
                           ? 'border-blue-600 bg-blue-600'
                           : 'border-gray-300'
                       }`}
                     >
-                      {selectedOption === index && (
-                        <div className="w-2 h-2 rounded-full bg-white"></div>
+                      {feedback ? (
+                        index === feedback.correctAnswer ? (
+                          <span className="text-sm font-bold">✓</span>
+                        ) : index === feedback.selectedOption ? (
+                          <span className="text-sm font-bold">✕</span>
+                        ) : null
+                      ) : (
+                        selectedOption === index && <div className="w-2 h-2 rounded-full bg-white"></div>
                       )}
                     </div>
                     <span className="text-gray-800">{option}</span>
                   </div>
                 </button>
-              ))}
+                );
+              })}
             </div>
           </div>
 

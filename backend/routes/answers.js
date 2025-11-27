@@ -57,7 +57,7 @@ router.post('/', protect, async (req, res) => {
 router.get('/my-answers', protect, async (req, res) => {
   try {
     const answers = await Answer.find({ user: req.user.id })
-      .populate('question', 'question options')
+      .populate('question', 'question options correctAnswer')
       .sort({ createdAt: -1 });
     
     res.json({ success: true, answers });

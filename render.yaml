@@ -15,4 +15,4 @@ services:
       - key: JWT_EXPIRE
         value: 7d
       - key: CORS_ORIGIN
-        value: https://your-frontend-domain.onrender.com
+        value: https://question-ans-app-9e8y.onrender.com

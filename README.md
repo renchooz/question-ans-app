@@ -55,7 +55,7 @@ npm install
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/qa-app
 JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
-JWT_EXPIRE=7d
+JWT_EXPIRE=1h
 ```
 
 4. Start the backend server:
@@ -107,7 +107,7 @@ The repository includes a `render.yaml` blueprint so you can spin up matching ba
 3. In the backend service settings add the required environment variables (listed in `backend/env.example`):
    - `MONGODB_URI` (Atlas or other connection string)
    - `JWT_SECRET`
-   - `JWT_EXPIRE` (optional, defaults to `7d`)
+   - `JWT_EXPIRE` (optional, defaults to `1h`)
    - `CORS_ORIGIN` (comma-separated list that must include the final frontend URL)
 4. Once the backend deploys, grab its public URL (e.g. `https://qa-app-backend.onrender.com`) and set `REACT_APP_API_URL` for the frontend service to `https://qa-app-backend.onrender.com/api`.
 5. Trigger a redeploy of the frontend so the build picks up the updated API URL.
