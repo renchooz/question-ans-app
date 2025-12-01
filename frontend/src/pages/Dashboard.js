@@ -194,9 +194,9 @@ const Dashboard = () => {
         </div>
 
         {/* Question Card */}
-        <div className="bg-white rounded-xl shadow-lg p-8">
+        <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8">
           <div className="mb-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 leading-snug">
               {currentQuestion.question}
             </h2>
             <div className="space-y-3">
@@ -281,7 +281,9 @@ const Dashboard = () => {
                   Math.min(questions.length - 1, currentQuestionIndex + 1)
                 )
               }
-              disabled={currentQuestionIndex === questions.length - 1}
+              disabled={
+                currentQuestionIndex === questions.length - 1 || !isAnswered
+              }
               className="w-full sm:w-auto px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Next
@@ -289,27 +291,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Question Navigation */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">All Questions</h3>
-          <div className="grid grid-cols-4 sm:grid-cols-8 lg:grid-cols-12 gap-2">
-            {questions.map((q, index) => (
-              <button
-                key={q._id}
-                onClick={() => setCurrentQuestionIndex(index)}
-                className={`p-3 rounded-lg text-sm font-medium transition-all ${
-                  index === currentQuestionIndex
-                    ? 'bg-blue-600 text-white'
-                    : answeredQuestions.has(q._id)
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {index + 1}
-              </button>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );
