@@ -63,7 +63,7 @@ router.get('/users', async (req, res) => {
 // Create question
 router.post('/questions', async (req, res) => {
   try {
-    const { question, options, correctAnswer, category } = req.body;
+    const { question, options, correctAnswer, category, chapter } = req.body;
 
     if (!question || !options || options.length !== 4 || correctAnswer === undefined) {
       return res.status(400).json({ message: 'Please provide all required fields' });
@@ -73,7 +73,8 @@ router.post('/questions', async (req, res) => {
       question,
       options,
       correctAnswer,
-      category: category || 'General'
+      category: category || 'General',
+      chapter: chapter || 'General'
     });
 
     res.status(201).json({ success: true, question: newQuestion });
@@ -114,7 +115,7 @@ router.get('/questions/:id', async (req, res) => {
 // Update question
 router.put('/questions/:id', async (req, res) => {
   try {
-    const { question, options, correctAnswer, category } = req.body;
+    const { question, options, correctAnswer, category, chapter } = req.body;
 
     const updatedQuestion = await Question.findByIdAndUpdate(
       req.params.id,
@@ -122,7 +123,8 @@ router.put('/questions/:id', async (req, res) => {
         question,
         options,
         correctAnswer,
-        category
+        category,
+        chapter
       },
       { new: true, runValidators: true }
     );

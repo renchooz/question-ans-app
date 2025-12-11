@@ -51,7 +51,8 @@ const AdminDashboard = () => {
     question: '',
     options: ['', '', '', ''],
     correctAnswer: 0,
-    category: 'General'
+    category: 'General',
+    chapter: 'General'
   });
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -198,7 +199,8 @@ const AdminDashboard = () => {
         question: '',
         options: ['', '', '', ''],
         correctAnswer: 0,
-        category: 'General'
+        category: 'General',
+        chapter: 'General'
       });
       fetchQuestions();
       fetchAnalytics();
@@ -218,7 +220,8 @@ const AdminDashboard = () => {
       question: question.question,
       options: [...question.options],
       correctAnswer: question.correctAnswer,
-      category: question.category || 'General'
+      category: question.category || 'General',
+      chapter: question.chapter || 'General'
     });
     setShowQuestionModal(true);
   };
@@ -360,7 +363,8 @@ const AdminDashboard = () => {
                       question: '',
                       options: ['', '', '', ''],
                       correctAnswer: 0,
-                      category: 'General'
+                      category: 'General',
+                      chapter: 'General'
                     });
                     setShowQuestionModal(true);
                   }}
@@ -408,7 +412,7 @@ const AdminDashboard = () => {
                                 ))}
                               </div>
                               <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                                {q.category}
+                                {q.category} • {q.chapter || 'General'}
                               </span>
                             </div>
                             <div className="flex gap-2 md:ml-4 flex-wrap">
@@ -782,6 +786,19 @@ const AdminDashboard = () => {
                     value={questionForm.category}
                     onChange={(e) =>
                       setQuestionForm({ ...questionForm, category: e.target.value })
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Chapter
+                  </label>
+                  <input
+                    type="text"
+                    value={questionForm.chapter}
+                    onChange={(e) =>
+                      setQuestionForm({ ...questionForm, chapter: e.target.value })
                     }
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />

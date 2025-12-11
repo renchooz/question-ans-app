@@ -27,11 +27,12 @@ const Login = () => {
 
     if (result.success) {
       toast.success('Login successful!');
-      // Check user role from result
       if (result.user?.role === 'admin') {
         navigate('/admin');
       } else {
-        navigate('/dashboard');
+        // force payment step for regular users
+        localStorage.removeItem('hasPaid');
+        navigate('/payment');
       }
     } else {
       toast.error(result.message || 'Login failed');

@@ -21,6 +21,13 @@ const Dashboard = () => {
     fetchQuestions();
   }, []);
 
+  // Require payment for regular users
+  useEffect(() => {
+    if (!loading && user?.role === 'user' && localStorage.getItem('hasPaid') !== 'true') {
+      navigate('/payment');
+    }
+  }, [loading, user, navigate]);
+
   useEffect(() => {
     if (
       !loading &&
@@ -196,6 +203,14 @@ const Dashboard = () => {
         {/* Question Card */}
         <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8">
           <div className="mb-6">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-semibold text-purple-700">
+                Chapter: {currentQuestion.chapter || 'General'}
+              </span>
+              <span className="text-xs text-gray-500">
+                Category: {currentQuestion.category || 'General'}
+              </span>
+            </div>
             <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 leading-snug">
               {currentQuestion.question}
             </h2>

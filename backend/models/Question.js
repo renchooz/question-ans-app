@@ -23,6 +23,10 @@ const questionSchema = new mongoose.Schema(
       min: 0,
       max: 3
     },
+    chapter: {
+      type: String,
+      default: 'General'
+    },
     category: {
       type: String,
       default: 'General'
